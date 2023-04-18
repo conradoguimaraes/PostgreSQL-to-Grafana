@@ -1,5 +1,5 @@
-# Dinasore-Grafana
-DinasoreGrafana
+# PostgreSQL-to-Grafana
+PostgreSQL-to-Grafana
 
 
 Page:

@@ -1,0 +1,12 @@
+.template = Sphinx-Dinasore-Lite-Exercise
+xxxxxx = Sphinx-Dinasore-Lite-Exercise
+Documents\Sphinx\ = Documents\GitHub\Dinasore-Lite-Exercise\~
+Help Python's = Dinasore-Lite Exercise
+Help Python = Dinasore-Lite Exercise
+helppython = Dinasore-Lite-Exercise
+2022, Conrado = 2023, Conrado
+Sphinx-Dinasore-Lite-Exercise = Sphinx-Dinasore-Grafana
+Dinasore-Lite-Exercise = Dinasore-Grafana
+Dinasore-Lite Exercise = Dinasore-Grafana
+Documents\GitHub\Dinasore-Lite-Exercise\~ = Documents\GitHub\DinasoreGrafana\~
+Documents\GitHub\DinasoreGrafana\~ = Documents\GitHub\Dinasore-Grafana\~

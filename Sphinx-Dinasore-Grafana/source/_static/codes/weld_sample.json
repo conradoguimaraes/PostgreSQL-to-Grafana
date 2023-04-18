@@ -1,0 +1,13 @@
+{
+    "timeStart": 123.456,
+    "timeEnd": 123.456,
+    "environmentT": 123.456,
+    "motorBearingT": 123.456,
+    "spindleBearingT": 123.456,
+    "counter": 1,
+    "sdIntensity": 123.456,
+    "times": [t0,t1,t2,...,tk],
+    "angularVelocity": [a0,a1,a2,...,ak],
+    "force": [fx0,f1,f2,..., fk],
+    "displacement": [d0,d1,d2,...,dk]
+}

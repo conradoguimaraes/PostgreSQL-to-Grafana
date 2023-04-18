@@ -1,0 +1,1 @@
+' '.join(str(index)+"," for index in lista)[:-1]

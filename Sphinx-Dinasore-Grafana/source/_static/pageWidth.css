@@ -1,0 +1,23 @@
+.wy-nav-content {
+   /*max-width: none;*/
+   max-width: 130ch;
+}
+
+.wy-side-nav-search{
+   /* background-color: #347ae8; */
+   background-color: #6dc4c8f2;
+}
+
+.rst-content .admonition-todo, .rst-content .attention, .rst-content .caution, .rst-content .warning, .rst-content .wy-alert-warning.admonition, .rst-content .wy-alert-warning.danger, .rst-content .wy-alert-warning.error, .rst-content .wy-alert-warning.hint, .rst-content .wy-alert-warning.important, .rst-content .wy-alert-warning.note, .rst-content .wy-alert-warning.seealso, .rst-content .wy-alert-warning.tip, .wy-alert.wy-alert-warning {
+  background: #ffedcc;
+  width: 107ch;
+}
+
+.sphinx-tabs {
+  width: 110ch;
+}
+
+.sphinx-tabs-panel{
+  width: 110ch;
+}
+

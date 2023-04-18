@@ -6,8 +6,6 @@
 Welcome to PostgreSQL-to-Grafana documentation!
 ================================================
 
-The following documentation highlights 
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

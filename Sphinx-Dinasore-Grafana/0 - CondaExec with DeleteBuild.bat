@@ -1,3 +1,0 @@
-powershell.exe -executionpolicy remotesigned -File deleteBuild.ps1
-
-powershell.exe -ExecutionPolicy ByPass -noexit -command "& 'C:\ProgramData\Anaconda3\shell\condabin\conda-hook.ps1' ; conda activate 'C:\ProgramData\Anaconda3'; conda activate MeuAmbiente; cls; C:\Users\Podengos\Documents\GitHub\Dinasore-Grafana\Sphinx-Dinasore-Grafana\make.bat html; C:\Users\Podengos\Documents\GitHub\Dinasore-Grafana\Sphinx-Dinasore-Grafana\build\html\index.html; timeout 4; exit

@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PostgreSQL to Grafana &mdash; PostgreSQL-to-Grafana  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/customCSS.css" type="text/css" />
+      <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/tabs.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to PostgreSQL-to-Grafana documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> PostgreSQL-to-Grafana
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PostgreSQL to Grafana</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#database">Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-json-files">Reading JSON Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#json-to-database">JSON to Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grafana">Grafana</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-postgresql-datasource">Adding PostgreSQL DataSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exploring-the-data-source">Exploring the Data Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-dashboard">Creating Dashboard</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PostgreSQL-to-Grafana</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>PostgreSQL to Grafana</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/PostgreSQL-to-Grafana.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="postgresql-to-grafana">
+<h1>PostgreSQL to Grafana<a class="headerlink" href="#postgresql-to-grafana" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="on-this-page">
+<p class="topic-title">On this page</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#database" id="id1">Database</a></p></li>
+<li><p><a class="reference internal" href="#reading-json-files" id="id2">Reading JSON Files</a></p></li>
+<li><p><a class="reference internal" href="#json-to-database" id="id3">JSON to Database</a></p></li>
+<li><p><a class="reference internal" href="#grafana" id="id4">Grafana</a></p>
+<ul>
+<li><p><a class="reference internal" href="#adding-postgresql-datasource" id="id5">Adding PostgreSQL DataSource</a></p></li>
+<li><p><a class="reference internal" href="#exploring-the-data-source" id="id6">Exploring the Data Source</a></p></li>
+<li><p><a class="reference internal" href="#creating-dashboard" id="id7">Creating Dashboard</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="database">
+<h2>Database<a class="headerlink" href="#database" title="Permalink to this heading"></a></h2>
+<hr class="docutils" />
+<p>The database to be used will be the <a class="reference external" href="https://db.fe.up.pt/phppgadmin/">PostgreSQL</a>. The main connection parameters:</p>
+<ul class="simple">
+<li><p>database name</p></li>
+<li><p>username</p></li>
+<li><p>password</p></li>
+<li><p>host (‘db.fe.up.pt’)</p></li>
+<li><p>port (5432)</p></li>
+</ul>
+<p>The data that we want to store in this database has the JSON file format with the following structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span>    <span class="s2">&quot;timeStart&quot;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 3</span>    <span class="s2">&quot;timeEnd&quot;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 4</span>    <span class="s2">&quot;environmentT&quot;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 5</span>    <span class="s2">&quot;motorBearingT&quot;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 6</span>    <span class="s2">&quot;spindleBearingT&quot;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 7</span>    <span class="s2">&quot;counter&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="linenos"> 8</span>    <span class="s2">&quot;sdIntensity&quot;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 9</span>    <span class="s2">&quot;times&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">t0</span><span class="p">,</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">tk</span><span class="p">],</span>
+<span class="linenos">10</span>    <span class="s2">&quot;angularVelocity&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">a0</span><span class="p">,</span><span class="n">a1</span><span class="p">,</span><span class="n">a2</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">ak</span><span class="p">],</span>
+<span class="linenos">11</span>    <span class="s2">&quot;force&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fx0</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">,</span><span class="o">...</span><span class="p">,</span> <span class="n">fk</span><span class="p">],</span>
+<span class="linenos">12</span>    <span class="s2">&quot;displacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">d0</span><span class="p">,</span><span class="n">d1</span><span class="p">,</span><span class="n">d2</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">dk</span><span class="p">]</span>
+<span class="linenos">13</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Considering each field corresponding to one column in the database table, the SQL statement (in python string format) below easly creates the table (<em>WELD_SAMPLES</em>) with the required columns and data types:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Standard Format</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Python String Format</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="ss">&quot;WELD_SAMPLES&quot;</span><span class="w"> </span><span class="p">(</span><span class="ss">&quot;id&quot;</span><span class="w"> </span><span class="nb">serial</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;time_start&quot;</span><span class="w"> </span><span class="nb">float</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;time_end&quot;</span><span class="w"> </span><span class="nb">float</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;environment_t&quot;</span><span class="w"> </span><span class="nb">float</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;motor_bearing_t&quot;</span><span class="w"> </span><span class="nb">float</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;spindle_bearing_t&quot;</span><span class="w"> </span><span class="nb">float</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;counter&quot;</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;sdintensity&quot;</span><span class="w"> </span><span class="nb">float</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;times&quot;</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;angular_velocity&quot;</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;force&quot;</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;displacement&quot;</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">);</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="s1">&#39;CREATE TABLE IF NOT EXISTS &quot;WELD_SAMPLES&quot; (</span><span class="se">\</span>
+<span class="linenos"> 2</span><span class="s1">           &quot;id&quot; serial, </span><span class="se">\</span>
+<span class="linenos"> 3</span><span class="s1">           &quot;time_start&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 4</span><span class="s1">           &quot;time_end&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 5</span><span class="s1">           &quot;environment_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 6</span><span class="s1">           &quot;motor_bearing_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 7</span><span class="s1">           &quot;spindle_bearing_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 8</span><span class="s1">           &quot;counter&quot; int, </span><span class="se">\</span>
+<span class="linenos"> 9</span><span class="s1">           &quot;sdintensity&quot; float, </span><span class="se">\</span>
+<span class="linenos">10</span><span class="s1">           &quot;times&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos">11</span><span class="s1">           &quot;angular_velocity&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos">12</span><span class="s1">           &quot;force&quot; float ARRAY,</span><span class="se">\</span>
+<span class="linenos">13</span><span class="s1">           &quot;displacement&quot; float ARRAY</span><span class="se">\</span>
+<span class="linenos">14</span><span class="s1">)&#39;</span>
+</pre></div>
+</div>
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Therefore, to insert the JSON welding sample, the SQL statement (in python string format) would be:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">Standard Format</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">Python String Format</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="ss">&quot;WELD_SAMPLES&quot;</span><span class="w"> </span><span class="p">(</span><span class="n">time_start</span><span class="p">,</span><span class="w"> </span><span class="n">time_end</span><span class="p">,</span><span class="w"> </span><span class="n">environment_t</span><span class="p">,</span><span class="w"> </span><span class="n">motor_bearing_t</span><span class="p">,</span><span class="w"> </span><span class="n">spindle_bearing_t</span><span class="p">,</span><span class="w"> </span><span class="n">counter</span><span class="p">,</span><span class="w"> </span><span class="n">sdintensity</span><span class="p">,</span><span class="w"> </span><span class="n">times</span><span class="p">,</span><span class="w"> </span><span class="n">angular_velocity</span><span class="p">,</span><span class="w"> </span><span class="k">force</span><span class="p">,</span><span class="w"> </span><span class="n">displacement</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">,</span><span class="o">%</span><span class="n">s</span><span class="p">);</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="s1">&#39;INSERT INTO &quot;WELD_SAMPLES&quot; (</span><span class="se">\</span>
+<span class="linenos"> 2</span><span class="s1">    time_start, </span><span class="se">\</span>
+<span class="linenos"> 3</span><span class="s1">    time_end, </span><span class="se">\</span>
+<span class="linenos"> 4</span><span class="s1">    environment_t, </span><span class="se">\</span>
+<span class="linenos"> 5</span><span class="s1">    motor_bearing_t, </span><span class="se">\</span>
+<span class="linenos"> 6</span><span class="s1">    spindle_bearing_t, </span><span class="se">\</span>
+<span class="linenos"> 7</span><span class="s1">    counter, </span><span class="se">\</span>
+<span class="linenos"> 8</span><span class="s1">    sdintensity, </span><span class="se">\</span>
+<span class="linenos"> 9</span><span class="s1">    times, </span><span class="se">\</span>
+<span class="linenos">10</span><span class="s1">    angular_velocity, </span><span class="se">\</span>
+<span class="linenos">11</span><span class="s1">    force, </span><span class="se">\</span>
+<span class="linenos">12</span><span class="s1">    displacement</span><span class="se">\</span>
+<span class="linenos">13</span><span class="s1">) VALUES (</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">)&#39;</span> 
+</pre></div>
+</div>
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>The following Code Example has functions to</p>
+<ul class="simple">
+<li><p>delete the DB Schema</p></li>
+<li><p>create the DataBase with the required table</p></li>
+<li><p>create and return the connection handler</p></li>
+<li><p>insert data (list)</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">Code</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><details class="summary-show-code">
+<summary>Show Code</summary><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="linenos">  2</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  3</span><span class="sd">Created on Tue Apr 18 00:18:18 2023</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="sd">@author: Conrado</span>
+<span class="linenos">  6</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span><span class="c1">#%%</span>
+<span class="linenos">  9</span><span class="kn">import</span> <span class="nn">traceback</span>
+<span class="linenos"> 10</span><span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="linenos"> 11</span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos"> 12</span><span class="c1">#https://db.fe.up.pt/phppgadmin/</span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span>
+<span class="hll"><span class="linenos"> 15</span><span class="k">def</span> <span class="nf">deleteSchema</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span class="linenos"> 16</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos"> 17</span>                            <span class="n">user</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos"> 18</span>                            <span class="n">password</span><span class="o">=</span><span class="n">myPassword</span><span class="p">,</span>
+<span class="linenos"> 19</span>                            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;db.fe.up.pt&#39;</span><span class="p">,</span>
+<span class="linenos"> 20</span>                            <span class="n">port</span><span class="o">=</span> <span class="s1">&#39;5432&#39;</span><span class="p">)</span>
+<span class="linenos"> 21</span>    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="linenos"> 22</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;DROP SCHEMA IF EXISTS &quot;DINASORE&quot; CASCADE&#39;</span><span class="p">)</span>
+<span class="linenos"> 23</span>    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos"> 24</span>    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos"> 25</span>    <span class="k">return</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span>
+<span class="linenos"> 28</span><span class="k">def</span> <span class="nf">initDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="linenos"> 29</span>    <span class="c1"># Establishing the connection</span>
+<span class="linenos"> 30</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="hll"><span class="linenos"> 31</span>                            <span class="n">user</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+</span><span class="linenos"> 32</span>                            <span class="n">password</span><span class="o">=</span><span class="n">myPassword</span><span class="p">,</span>
+<span class="linenos"> 33</span>                            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;db.fe.up.pt&#39;</span><span class="p">,</span>
+<span class="linenos"> 34</span>                            <span class="n">port</span><span class="o">=</span> <span class="s1">&#39;5432&#39;</span><span class="p">)</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span>    <span class="c1"># Creating a cursor object using the cursor() method</span>
+<span class="linenos"> 37</span>    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span>    <span class="c1"># Executing an SQL function using the execute() method</span>
+<span class="linenos"> 40</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select version()&quot;</span><span class="p">)</span>
+<span class="linenos"> 41</span>    
+<span class="linenos"> 42</span>    <span class="c1"># Fetch a single row using fetchone() method.</span>
+<span class="linenos"> 43</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="linenos"> 44</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection established to: &quot;</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span>    <span class="c1">#Create DINASORE Schema</span>
+<span class="linenos"> 47</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CREATE SCHEMA IF NOT EXISTS &quot;DINASORE&quot;&#39;</span><span class="p">)</span>
+<span class="linenos"> 48</span>
+<span class="linenos"> 49</span>    <span class="c1">#Setting the path to DINASORE</span>
+<span class="linenos"> 50</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SET search_path TO &quot;DINASORE&quot;&#39;</span><span class="p">)</span>
+<span class="linenos"> 51</span>    
+<span class="linenos"> 52</span>    
+<span class="linenos"> 53</span>    <span class="c1">#Creating Arrays in PostgreSQL: https://www.postgresql.org/docs/current/arrays.html</span>
+<span class="linenos"> 54</span>    <span class="c1">#Other strategies: </span>
+<span class="linenos"> 55</span>    <span class="c1">#https://www.postgresql.org/docs/current/datatype-json.html</span>
+<span class="linenos"> 56</span>    <span class="c1">#https://www.blendo.co/blog/storing-json-in-postgresql/</span>
+<span class="linenos"> 57</span>    
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span>    
+<span class="linenos"> 60</span>    <span class="c1">#OBS: Camel Case may cause errors</span>
+<span class="linenos"> 61</span>    <span class="c1">#example:</span>
+<span class="linenos"> 62</span>    <span class="c1">#psycopg2.errors.UndefinedColumn: column &quot;timestart&quot; of relation &quot;WELD_SAMPLES&quot; does not exist</span>
+<span class="linenos"> 63</span>    <span class="c1">#LINE 1: INSERT INTO &quot;WELD_SAMPLES&quot; (            timeStart,          ...</span>
+<span class="linenos"> 64</span>    
+<span class="linenos"> 65</span>    
+<span class="linenos"> 66</span>    
+<span class="linenos"> 67</span>    <span class="c1">#Sample example:</span>
+<span class="linenos"> 68</span>    <span class="c1"># {</span>
+<span class="linenos"> 69</span>    <span class="c1">#     &quot;timeStart&quot;: 1643885832.053,</span>
+<span class="linenos"> 70</span>    <span class="c1">#     &quot;timeEnd&quot;: 1643885839.0434105,</span>
+<span class="linenos"> 71</span>    <span class="c1">#     &quot;environmentT&quot;: 316.10670037633975,</span>
+<span class="linenos"> 72</span>    <span class="c1">#     &quot;motorBearingT&quot;: 316.7429856634482,</span>
+<span class="linenos"> 73</span>    <span class="c1">#     &quot;spindleBearingT&quot;: 340.6813214621365,</span>
+<span class="linenos"> 74</span>    <span class="c1">#     &quot;counter&quot;: 1,</span>
+<span class="linenos"> 75</span>    <span class="c1">#     &quot;sdIntensity&quot;: 1.4685540517262314,</span>
+<span class="linenos"> 76</span>    <span class="c1">#     &quot;times&quot;: [t0,t1,t2,...],</span>
+<span class="linenos"> 77</span>    <span class="c1">#     &quot;angularVelocity&quot;: [a0,a1,a2...],</span>
+<span class="linenos"> 78</span>    <span class="c1">#     &quot;force&quot;: [fx0, f1, f2, ...],</span>
+<span class="linenos"> 79</span>    <span class="c1">#     &quot;displacement&quot;: [d0,d1,d2,...]</span>
+<span class="linenos"> 80</span>    <span class="c1"># }</span>
+<span class="linenos"> 81</span>    
+<span class="linenos"> 82</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="linenos"> 83</span>       <span class="s1">&#39;CREATE TABLE IF NOT EXISTS &quot;WELD_SAMPLES&quot; (</span><span class="se">\</span>
+<span class="linenos"> 84</span><span class="s1">           &quot;id&quot; serial, </span><span class="se">\</span>
+<span class="linenos"> 85</span><span class="s1">           &quot;time_start&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 86</span><span class="s1">           &quot;time_end&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 87</span><span class="s1">           &quot;environment_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 88</span><span class="s1">           &quot;motor_bearing_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 89</span><span class="s1">           &quot;spindle_bearing_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 90</span><span class="s1">           &quot;counter&quot; int, </span><span class="se">\</span>
+<span class="linenos"> 91</span><span class="s1">           &quot;sdintensity&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 92</span><span class="s1">           &quot;times&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos"> 93</span><span class="s1">           &quot;angular_velocity&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos"> 94</span><span class="s1">           &quot;force&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos"> 95</span><span class="s1">           &quot;displacement&quot; float ARRAY</span><span class="se">\</span>
+<span class="linenos"> 96</span><span class="s1">        )&#39;</span>
+<span class="linenos"> 97</span>    <span class="p">)</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span>
+<span class="linenos">100</span>    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span>    <span class="c1">#Closing the connection</span>
+<span class="linenos">103</span>    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">104</span>   
+<span class="linenos">105</span>    <span class="k">return</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span>
+<span class="linenos">109</span>
+<span class="linenos">110</span><span class="k">def</span> <span class="nf">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="linenos">111</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="hll"><span class="linenos">112</span>                            <span class="n">user</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+</span><span class="linenos">113</span>                            <span class="n">password</span><span class="o">=</span><span class="n">myPassword</span><span class="p">,</span>
+<span class="linenos">114</span>                            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;db.fe.up.pt&#39;</span><span class="p">,</span>
+<span class="linenos">115</span>                            <span class="n">port</span><span class="o">=</span> <span class="s1">&#39;5432&#39;</span><span class="p">)</span>
+<span class="linenos">116</span>    <span class="k">return</span> <span class="n">conn</span>
+<span class="linenos">117</span>
+<span class="linenos">118</span>
+<span class="linenos">119</span><span class="k">def</span> <span class="nf">insertDataV3</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">statement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="linenos">120</span>    <span class="c1">#Inputs:</span>
+<span class="hll"><span class="linenos">121</span>    <span class="c1">#    connection (such as connection = getConnectionDB())</span>
+</span><span class="linenos">122</span>    <span class="c1">#    statement [STR]: statement sql</span>
+<span class="linenos">123</span>    <span class="c1">#    data [LIST]: list with values to be saved</span>
+<span class="linenos">124</span>    <span class="k">try</span><span class="p">:</span>
+<span class="linenos">125</span>        <span class="n">delay</span> <span class="o">=</span> <span class="mf">0.050</span>
+<span class="linenos">126</span>        <span class="c1">#-------------------------------------------------------</span>
+<span class="linenos">127</span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+<span class="linenos">128</span>            <span class="c1">#Sometimes, postgres will give psycopg2.OperationalError</span>
+<span class="linenos">129</span>            <span class="c1">#To avoid losing data and return without saving anything,</span>
+<span class="linenos">130</span>            <span class="c1">#we try to save the data 20 times. </span>
+<span class="linenos">131</span>            <span class="c1">#Whenever the error occurs, we wait some time and</span>
+<span class="linenos">132</span>            <span class="c1">#try to close the current connection in order to re-connect.</span>
+<span class="linenos">133</span>            <span class="k">try</span><span class="p">:</span>
+<span class="linenos">134</span>                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Trying...(</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
+<span class="linenos">135</span>                <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="linenos">136</span>                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SET search_path TO &quot;DINASORE&quot;&#39;</span><span class="p">)</span>
+<span class="linenos">137</span>                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="linenos">138</span>            
+<span class="linenos">139</span>                <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos">140</span>                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Success.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">141</span>                <span class="k">return</span> <span class="n">k</span>
+<span class="linenos">142</span>            <span class="k">except</span><span class="p">:</span>
+<span class="linenos">143</span>                <span class="c1">#print(traceback.format_exc())</span>
+<span class="linenos">144</span>                
+<span class="linenos">145</span>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+<span class="linenos">146</span>                <span class="k">try</span><span class="p">:</span>
+<span class="linenos">147</span>                    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">148</span>                    <span class="n">connection</span> <span class="o">=</span> <span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span>
+<span class="linenos">149</span>                                                 <span class="n">myPassword</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+<span class="linenos">150</span>                <span class="k">except</span><span class="p">:</span>
+<span class="linenos">151</span>                    <span class="n">connection</span> <span class="o">=</span> <span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span>
+<span class="linenos">152</span>                                                 <span class="n">myPassword</span><span class="o">=</span><span class="n">myPassword</span><span class="p">)</span>
+<span class="linenos">153</span>        
+<span class="linenos">154</span>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">155</span>    <span class="k">except</span><span class="p">:</span>
+<span class="linenos">156</span>        <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+<span class="linenos">157</span>    
+<span class="linenos">158</span>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</details></div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="reading-json-files">
+<h2>Reading JSON Files<a class="headerlink" href="#reading-json-files" title="Permalink to this heading"></a></h2>
+<hr class="docutils" />
+<p>If we have one subfolder with JSON sample files (e.g., <code class="code docutils literal notranslate"><span class="pre">mysamples\weld_sample01.json</span></code>), it is desirable to read their content.</p>
+<p>The main steps to read the JSON sample files:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">(1)Create Files List</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">(2)Create File Path</button><button aria-controls="panel-3-3-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-2" name="3-2" role="tab" tabindex="-1">(3)Read JSON File</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>Convert the subfolder (e.g., <code class="code docutils literal notranslate"><span class="pre">mysamples</span></code>) files into a Python List, which will be useful to iterate over them.</p>
+<p>List example: mySampleFiles = [‘weld_sample01.json’, ‘weld_sample02.json’, ‘weld_sample03.json’, …, ‘weld_samplexy.json’]</p>
+<p>Code example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">re</span> <span class="c1">#required for the sorting</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">def</span> <span class="nf">getJSONfilesList</span><span class="p">(</span><span class="n">subfolderName</span> <span class="o">=</span> <span class="s2">&quot;samples&quot;</span><span class="p">):</span>
+<span class="linenos"> 5</span>    
+<span class="linenos"> 6</span>    <span class="n">filesFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">subfolderName</span><span class="p">)</span>
+<span class="linenos"> 7</span>    <span class="n">filesList</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">filesFolder</span><span class="p">))</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="n">sortAlphanum</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(\d+)&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)]</span>
+<span class="linenos">10</span>    
+<span class="linenos">11</span>    <span class="c1">#Natural Sort:</span>
+<span class="linenos">12</span>    <span class="c1">#[&#39;weld_0.json&#39;, &#39;weld_1.json&#39;, &#39;weld_10.json&#39;, &#39;weld_100.json&#39;, ..., &#39;weld_2.json&#39;, ...]</span>
+<span class="linenos">13</span>    <span class="c1">#to</span>
+<span class="linenos">14</span>    <span class="c1">##[&#39;weld_0.json&#39;, &#39;weld_1.json&#39;, &#39;weld_2.json&#39;, &#39;weld_3.json&#39;, ..., &#39;weld_10.json&#39;, ..., &#39;weld_100.json&#39;]</span>
+<span class="linenos">15</span>    
+<span class="linenos">16</span>    <span class="n">filesList</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filesList</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sortAlphanum</span><span class="p">)</span>
+<span class="linenos">17</span>    
+<span class="linenos">18</span>    <span class="k">return</span> <span class="n">filesList</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>
+<span class="hll"><span class="linenos">21</span><span class="n">filesList</span> <span class="o">=</span> <span class="n">getJSONfilesList</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Join the Current Working Directory, with the subfolder and with the JSON filename</p>
+<p>Example:</p>
+<blockquote>
+<div><p><code class="code docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">=</span> <span class="pre">C:\Users\Admin\Dinasore\mysamples\weld_sample01.json</span></code></p>
+<p><code class="code docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">=</span> <span class="pre">C:\Users\Admin\Dinasore\mysamples\weld_sample02.json</span></code></p>
+<p>…</p>
+<p><code class="code docutils literal notranslate"><span class="pre">filePath</span> <span class="pre">=</span> <span class="pre">C:\Users\Admin\Dinasore\mysamples\weld_samplexy.json</span></code></p>
+</div></blockquote>
+<p>Code Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">subfolder</span> <span class="o">=</span> <span class="s2">&quot;samples&quot;</span>
+<span class="linenos">2</span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;weld_sample01.json&quot;</span>
+<span class="linenos">3</span><span class="n">filePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;samples&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Other methods also work.</p>
+</div><div aria-labelledby="tab-3-3-2" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-2" name="3-2" role="tabpanel" tabindex="0"><p>Considering a List of JSON Files inside the “samples” subfolder:</p>
+<ul class="simple">
+<li><p>Iterate over the JSON files</p></li>
+<li><p>Create FilePath for the current file in the current iteration</p></li>
+<li><p>Open the file</p></li>
+<li><p>Load the JSON data (returns dictionary data type)</p></li>
+<li><p>Extract the desired dictionary fields and append them to a dataList</p></li>
+</ul>
+<p>The conversion from dictionary to list is useful since it complies with the SQL Statement considered previously.</p>
+<p>Code Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">json</span>
+</span><span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1">#Get the Files in List Format:</span>
+<span class="linenos"> 4</span><span class="n">filesList</span> <span class="o">=</span> <span class="n">getJSONfilesList</span><span class="p">()</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1">#Iterate over the sample files:</span>
+<span class="linenos"> 7</span><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filesList</span><span class="p">:</span>
+<span class="linenos"> 8</span>    <span class="c1">#Create FilePath</span>
+<span class="linenos"> 9</span>    <span class="n">filePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;samples&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+<span class="linenos">10</span>    
+<span class="linenos">11</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonFile</span><span class="p">:</span>
+<span class="linenos">12</span>        <span class="c1">#Load the File contents</span>
+<span class="linenos">13</span>        <span class="n">fileData</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">jsonFile</span><span class="p">)</span>
+<span class="linenos">14</span>        <span class="n">dataList</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">15</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;timeStart&quot;</span><span class="p">],</span>
+<span class="linenos">16</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;timeEnd&quot;</span><span class="p">],</span>
+<span class="linenos">17</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;environmentT&quot;</span><span class="p">],</span>
+<span class="linenos">18</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;motorBearingT&quot;</span><span class="p">],</span>
+<span class="linenos">19</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;spindleBearingT&quot;</span><span class="p">],</span>
+<span class="linenos">20</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;counter&quot;</span><span class="p">],</span>
+<span class="linenos">21</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;sdIntensity&quot;</span><span class="p">],</span>
+<span class="linenos">22</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;times&quot;</span><span class="p">],</span>
+<span class="linenos">23</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;angularVelocity&quot;</span><span class="p">],</span>
+<span class="linenos">24</span>            <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;force&quot;</span><span class="p">]</span>
+<span class="linenos">25</span>        <span class="p">]</span>
+</pre></div>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">fileData</span></code> (dictionary Data Type) having the structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">fileData</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos"> 2</span>	<span class="s1">&#39;timeStart&#39;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 3</span>	 <span class="s1">&#39;timeEnd&#39;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 4</span>	 <span class="s1">&#39;environmentT&#39;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 5</span>	 <span class="s1">&#39;motorBearingT&#39;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 6</span>	 <span class="s1">&#39;spindleBearingT&#39;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 7</span>	 <span class="s1">&#39;counter&#39;</span><span class="p">:</span> <span class="mi">112</span><span class="p">,</span>
+<span class="linenos"> 8</span>	 <span class="s1">&#39;sdIntensity&#39;</span><span class="p">:</span> <span class="mf">123.456</span><span class="p">,</span>
+<span class="linenos"> 9</span>	 <span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+<span class="linenos">10</span>	 <span class="s1">&#39;angularVelocity&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+<span class="linenos">11</span>	 <span class="s1">&#39;force&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+<span class="linenos">12</span>	 <span class="s1">&#39;displacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">d0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="linenos">13</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not forget to import the json library.</p>
+</div>
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="json-to-database">
+<h2>JSON to Database<a class="headerlink" href="#json-to-database" title="Permalink to this heading"></a></h2>
+<hr class="docutils" />
+<p>With the above ideas, the full example codes are:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0"><li><p>main.py</p></li>
+</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1"><li><p>dbFunctions</p></li>
+</button><button aria-controls="panel-4-4-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-2" name="4-2" role="tab" tabindex="-1">Results</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>Convert the subfolder (e.g., <code class="code docutils literal notranslate"><span class="pre">mysamples</span></code>) files into a Python List, which will be useful to iterate over them.</p>
+<p>List example: mySampleFiles = [‘weld_sample01.json’, ‘weld_sample02.json’, ‘weld_sample03.json’, …, ‘weld_samplexy.json’]</p>
+<p>Code example:</p>
+<details class="summary-show-code">
+<summary>Show Code</summary><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="linenos">  2</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  3</span><span class="sd">Created on Tue Apr 18 00:40:46 2023</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="sd">@author: Conrado</span>
+<span class="linenos">  6</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span><span class="c1">#%%</span>
+<span class="linenos">  9</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos"> 10</span><span class="kn">import</span> <span class="nn">re</span>
+<span class="linenos"> 11</span><span class="kn">import</span> <span class="nn">json</span>
+<span class="linenos"> 12</span><span class="kn">import</span> <span class="nn">traceback</span>
+<span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">dbFunctions</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span>
+<span class="linenos"> 16</span><span class="k">def</span> <span class="nf">getJSONfilesList</span><span class="p">(</span><span class="n">subfolderName</span> <span class="o">=</span> <span class="s2">&quot;mysamples&quot;</span><span class="p">):</span>
+<span class="linenos"> 17</span>    
+<span class="linenos"> 18</span>    <span class="n">filesFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">subfolderName</span><span class="p">)</span>
+<span class="linenos"> 19</span>    <span class="n">filesList</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">filesFolder</span><span class="p">))</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span>    <span class="n">sortAlphanum</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(\d+)&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)]</span>
+<span class="linenos"> 22</span>    
+<span class="linenos"> 23</span>    <span class="c1">#Natural Sort:</span>
+<span class="linenos"> 24</span>    <span class="c1">#[&#39;weld_0.json&#39;, &#39;weld_1.json&#39;, &#39;weld_10.json&#39;, &#39;weld_100.json&#39;, ..., &#39;weld_2.json&#39;, ...]</span>
+<span class="linenos"> 25</span>    <span class="c1">#to</span>
+<span class="linenos"> 26</span>    <span class="c1">##[&#39;weld_0.json&#39;, &#39;weld_1.json&#39;, &#39;weld_2.json&#39;, &#39;weld_3.json&#39;, ..., &#39;weld_10.json&#39;, ..., &#39;weld_100.json&#39;]</span>
+<span class="linenos"> 27</span>    
+<span class="linenos"> 28</span>    <span class="n">filesList</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filesList</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sortAlphanum</span><span class="p">)</span>
+<span class="linenos"> 29</span>    
+<span class="linenos"> 30</span>    <span class="k">return</span> <span class="n">filesList</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span>
+<span class="linenos"> 35</span><span class="n">dbUsername</span> <span class="o">=</span> <span class="s2">&quot;abcde&quot;</span>
+<span class="linenos"> 36</span><span class="n">dbPassword</span> <span class="o">=</span> <span class="s2">&quot;abcde1234&quot;</span>
+<span class="linenos"> 37</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span><span class="k">try</span><span class="p">:</span>
+<span class="linenos"> 40</span>    <span class="n">dbFunctions</span><span class="o">.</span><span class="n">deleteSchema</span><span class="p">(</span><span class="n">myUsername</span> <span class="o">=</span> <span class="n">dbUsername</span><span class="p">,</span>
+<span class="linenos"> 41</span>                             <span class="n">myPassword</span> <span class="o">=</span> <span class="n">dbPassword</span><span class="p">)</span>
+<span class="linenos"> 42</span>    <span class="n">dbFunctions</span><span class="o">.</span><span class="n">initDB</span><span class="p">(</span><span class="n">myUsername</span> <span class="o">=</span> <span class="n">dbUsername</span><span class="p">,</span>
+<span class="linenos"> 43</span>                       <span class="n">myPassword</span> <span class="o">=</span> <span class="n">dbPassword</span><span class="p">)</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span>    
+<span class="linenos"> 47</span>    <span class="n">insertStatement</span> <span class="o">=</span> <span class="p">(</span>   
+<span class="linenos"> 48</span>        <span class="s1">&#39;INSERT INTO &quot;WELD_SAMPLES&quot; (</span><span class="se">\</span>
+<span class="linenos"> 49</span><span class="s1">            time_start, </span><span class="se">\</span>
+<span class="linenos"> 50</span><span class="s1">            time_end, </span><span class="se">\</span>
+<span class="linenos"> 51</span><span class="s1">            environment_t, </span><span class="se">\</span>
+<span class="linenos"> 52</span><span class="s1">            motor_bearing_t, </span><span class="se">\</span>
+<span class="linenos"> 53</span><span class="s1">            spindle_bearing_t, </span><span class="se">\</span>
+<span class="linenos"> 54</span><span class="s1">            counter, </span><span class="se">\</span>
+<span class="linenos"> 55</span><span class="s1">            sdintensity, </span><span class="se">\</span>
+<span class="linenos"> 56</span><span class="s1">            times, </span><span class="se">\</span>
+<span class="linenos"> 57</span><span class="s1">            angular_velocity, </span><span class="se">\</span>
+<span class="linenos"> 58</span><span class="s1">            force, </span><span class="se">\</span>
+<span class="linenos"> 59</span><span class="s1">            displacement</span><span class="se">\</span>
+<span class="linenos"> 60</span><span class="s1">            ) VALUES (</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">)&#39;</span>   
+<span class="linenos"> 61</span>    <span class="p">)</span>
+<span class="linenos"> 62</span>        
+<span class="linenos"> 63</span>    
+<span class="linenos"> 64</span>        
+<span class="linenos"> 65</span>    <span class="n">filesList</span> <span class="o">=</span> <span class="n">getJSONfilesList</span><span class="p">()</span>
+<span class="linenos"> 66</span>    
+<span class="linenos"> 67</span>    <span class="n">filesNotSaved</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 68</span>    <span class="n">filesWithReadingError</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 69</span>    
+<span class="linenos"> 70</span>    <span class="n">DBconn</span> <span class="o">=</span> <span class="n">dbFunctions</span><span class="o">.</span><span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span> <span class="o">=</span> <span class="n">dbUsername</span><span class="p">,</span>
+<span class="linenos"> 71</span>                                         <span class="n">myPassword</span> <span class="o">=</span> <span class="n">dbPassword</span><span class="p">)</span>
+<span class="linenos"> 72</span>    <span class="c1">#DBcursor = DBconn.cursor()</span>
+<span class="linenos"> 73</span>    <span class="c1">#DBcursor.execute(&#39;SET search_path TO &quot;DINASORE&quot;&#39;)</span>
+<span class="linenos"> 74</span>    <span class="n">iters</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 75</span>    
+<span class="linenos"> 76</span>    <span class="c1">#Iterate over the sample files:</span>
+<span class="linenos"> 77</span>    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filesList</span><span class="p">:</span>
+<span class="linenos"> 78</span>        <span class="k">try</span><span class="p">:</span>
+<span class="linenos"> 79</span>            <span class="n">filePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;mysamples&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+<span class="linenos"> 80</span>            <span class="n">rc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+<span class="linenos"> 81</span>            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonFile</span><span class="p">:</span>
+<span class="linenos"> 82</span>                <span class="n">fileData</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">jsonFile</span><span class="p">)</span>
+<span class="linenos"> 83</span>                <span class="n">dataList</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos"> 84</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;timeStart&quot;</span><span class="p">],</span>
+<span class="linenos"> 85</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;timeEnd&quot;</span><span class="p">],</span>
+<span class="linenos"> 86</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;environmentT&quot;</span><span class="p">],</span>
+<span class="linenos"> 87</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;motorBearingT&quot;</span><span class="p">],</span>
+<span class="linenos"> 88</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;spindleBearingT&quot;</span><span class="p">],</span>
+<span class="linenos"> 89</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;counter&quot;</span><span class="p">],</span>
+<span class="linenos"> 90</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;sdIntensity&quot;</span><span class="p">],</span>
+<span class="linenos"> 91</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;times&quot;</span><span class="p">],</span>
+<span class="linenos"> 92</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;angularVelocity&quot;</span><span class="p">],</span>
+<span class="linenos"> 93</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;force&quot;</span><span class="p">],</span>
+<span class="linenos"> 94</span>                    <span class="n">fileData</span><span class="p">[</span><span class="s2">&quot;displacement&quot;</span><span class="p">],</span>
+<span class="linenos"> 95</span>                <span class="p">]</span>
+<span class="linenos"> 96</span>
+<span class="linenos"> 97</span>                <span class="n">rc</span> <span class="o">=</span> <span class="n">dbFunctions</span><span class="o">.</span><span class="n">insertDataV3</span><span class="p">(</span><span class="n">myUsername</span> <span class="o">=</span> <span class="n">dbUsername</span><span class="p">,</span>
+<span class="linenos"> 98</span>                                              <span class="n">myPassword</span> <span class="o">=</span> <span class="n">dbPassword</span><span class="p">,</span>
+<span class="linenos"> 99</span>                                              <span class="n">connection</span> <span class="o">=</span> <span class="n">DBconn</span><span class="p">,</span>
+<span class="linenos">100</span>                                              <span class="n">statement</span> <span class="o">=</span> <span class="n">insertStatement</span><span class="p">,</span>
+<span class="linenos">101</span>                                              <span class="n">data</span> <span class="o">=</span> <span class="n">dataList</span><span class="p">)</span>
+<span class="linenos">102</span>                
+<span class="linenos">103</span>                <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="linenos">104</span>                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> saved to BD.&quot;</span> <span class="o">%</span> <span class="n">file</span><span class="p">)</span>
+<span class="linenos">105</span>                    <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+<span class="linenos">106</span>                        <span class="n">DBconn</span> <span class="o">=</span> <span class="n">dbFunctions</span><span class="o">.</span><span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span> <span class="o">=</span> <span class="n">dbUsername</span><span class="p">,</span>
+<span class="linenos">107</span>                                                             <span class="n">myPassword</span> <span class="o">=</span> <span class="n">dbPassword</span><span class="p">)</span>
+<span class="linenos">108</span>                <span class="k">else</span><span class="p">:</span>
+<span class="linenos">109</span>                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> not saved to BD.&quot;</span> <span class="o">%</span> <span class="n">file</span><span class="p">)</span>
+<span class="linenos">110</span>                    <span class="n">filesNotSaved</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="linenos">111</span>                    <span class="n">DBconn</span> <span class="o">=</span> <span class="n">dbFunctions</span><span class="o">.</span><span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span> <span class="o">=</span> <span class="n">dbUsername</span><span class="p">,</span>
+<span class="linenos">112</span>                                                         <span class="n">myPassword</span> <span class="o">=</span> <span class="n">dbPassword</span><span class="p">)</span>
+<span class="linenos">113</span>
+<span class="linenos">114</span>        <span class="k">except</span><span class="p">:</span>
+<span class="linenos">115</span>            <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+<span class="linenos">116</span>            <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+<span class="linenos">117</span>                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR reading&quot;</span><span class="p">)</span>
+<span class="linenos">118</span>                <span class="n">filesWithReadingError</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="linenos">119</span>            <span class="k">pass</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span>        <span class="n">iters</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">122</span>        <span class="c1"># if (iters % 10 == 0):</span>
+<span class="linenos">123</span>        <span class="c1">#     break</span>
+<span class="linenos">124</span>
+<span class="linenos">125</span><span class="k">except</span><span class="p">:</span>
+<span class="linenos">126</span>    <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+<span class="linenos">127</span>
+</pre></div>
+</div>
+</details></div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="linenos">  2</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  3</span><span class="sd">Created on Tue Apr 18 00:18:18 2023</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="sd">@author: Conrado</span>
+<span class="linenos">  6</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span><span class="c1">#%%</span>
+<span class="linenos">  9</span><span class="kn">import</span> <span class="nn">traceback</span>
+<span class="linenos"> 10</span><span class="kn">import</span> <span class="nn">psycopg2</span>
+<span class="linenos"> 11</span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos"> 12</span><span class="c1">#https://db.fe.up.pt/phppgadmin/</span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span>
+<span class="hll"><span class="linenos"> 15</span><span class="k">def</span> <span class="nf">deleteSchema</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span class="linenos"> 16</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos"> 17</span>                            <span class="n">user</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos"> 18</span>                            <span class="n">password</span><span class="o">=</span><span class="n">myPassword</span><span class="p">,</span>
+<span class="linenos"> 19</span>                            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;db.fe.up.pt&#39;</span><span class="p">,</span>
+<span class="linenos"> 20</span>                            <span class="n">port</span><span class="o">=</span> <span class="s1">&#39;5432&#39;</span><span class="p">)</span>
+<span class="linenos"> 21</span>    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="linenos"> 22</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;DROP SCHEMA IF EXISTS &quot;DINASORE&quot; CASCADE&#39;</span><span class="p">)</span>
+<span class="linenos"> 23</span>    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos"> 24</span>    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos"> 25</span>    <span class="k">return</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span>
+<span class="hll"><span class="linenos"> 28</span><span class="k">def</span> <span class="nf">initDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span class="linenos"> 29</span>    <span class="c1"># Establishing the connection</span>
+<span class="linenos"> 30</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos"> 31</span>                            <span class="n">user</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos"> 32</span>                            <span class="n">password</span><span class="o">=</span><span class="n">myPassword</span><span class="p">,</span>
+<span class="linenos"> 33</span>                            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;db.fe.up.pt&#39;</span><span class="p">,</span>
+<span class="linenos"> 34</span>                            <span class="n">port</span><span class="o">=</span> <span class="s1">&#39;5432&#39;</span><span class="p">)</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span>    <span class="c1"># Creating a cursor object using the cursor() method</span>
+<span class="linenos"> 37</span>    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span>    <span class="c1"># Executing an SQL function using the execute() method</span>
+<span class="linenos"> 40</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select version()&quot;</span><span class="p">)</span>
+<span class="linenos"> 41</span>    
+<span class="linenos"> 42</span>    <span class="c1"># Fetch a single row using fetchone() method.</span>
+<span class="linenos"> 43</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+<span class="linenos"> 44</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection established to: &quot;</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span>    <span class="c1">#Create DINASORE Schema</span>
+<span class="linenos"> 47</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CREATE SCHEMA IF NOT EXISTS &quot;DINASORE&quot;&#39;</span><span class="p">)</span>
+<span class="linenos"> 48</span>
+<span class="linenos"> 49</span>    <span class="c1">#Setting the path to DINASORE</span>
+<span class="linenos"> 50</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SET search_path TO &quot;DINASORE&quot;&#39;</span><span class="p">)</span>
+<span class="linenos"> 51</span>    
+<span class="linenos"> 52</span>    
+<span class="linenos"> 53</span>    <span class="c1">#Creating Arrays in PostgreSQL: https://www.postgresql.org/docs/current/arrays.html</span>
+<span class="linenos"> 54</span>    <span class="c1">#Other strategies: </span>
+<span class="linenos"> 55</span>    <span class="c1">#https://www.postgresql.org/docs/current/datatype-json.html</span>
+<span class="linenos"> 56</span>    <span class="c1">#https://www.blendo.co/blog/storing-json-in-postgresql/</span>
+<span class="linenos"> 57</span>    
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span>    
+<span class="linenos"> 60</span>    <span class="c1">#OBS: Camel Case may cause errors</span>
+<span class="linenos"> 61</span>    <span class="c1">#example:</span>
+<span class="linenos"> 62</span>    <span class="c1">#psycopg2.errors.UndefinedColumn: column &quot;timestart&quot; of relation &quot;WELD_SAMPLES&quot; does not exist</span>
+<span class="linenos"> 63</span>    <span class="c1">#LINE 1: INSERT INTO &quot;WELD_SAMPLES&quot; (            timeStart,          ...</span>
+<span class="linenos"> 64</span>    
+<span class="linenos"> 65</span>    
+<span class="linenos"> 66</span>    
+<span class="linenos"> 67</span>    <span class="c1">#Sample example:</span>
+<span class="linenos"> 68</span>    <span class="c1"># {</span>
+<span class="linenos"> 69</span>    <span class="c1">#     &quot;timeStart&quot;: 1643885832.053,</span>
+<span class="linenos"> 70</span>    <span class="c1">#     &quot;timeEnd&quot;: 1643885839.0434105,</span>
+<span class="linenos"> 71</span>    <span class="c1">#     &quot;environmentT&quot;: 316.10670037633975,</span>
+<span class="linenos"> 72</span>    <span class="c1">#     &quot;motorBearingT&quot;: 316.7429856634482,</span>
+<span class="linenos"> 73</span>    <span class="c1">#     &quot;spindleBearingT&quot;: 340.6813214621365,</span>
+<span class="linenos"> 74</span>    <span class="c1">#     &quot;counter&quot;: 1,</span>
+<span class="linenos"> 75</span>    <span class="c1">#     &quot;sdIntensity&quot;: 1.4685540517262314,</span>
+<span class="linenos"> 76</span>    <span class="c1">#     &quot;times&quot;: [t0,t1,t2,...],</span>
+<span class="linenos"> 77</span>    <span class="c1">#     &quot;angularVelocity&quot;: [a0,a1,a2...],</span>
+<span class="linenos"> 78</span>    <span class="c1">#     &quot;force&quot;: [fx0, f1, f2, ...],</span>
+<span class="linenos"> 79</span>    <span class="c1">#     &quot;displacement&quot;: [d0,d1,d2,...]</span>
+<span class="linenos"> 80</span>    <span class="c1"># }</span>
+<span class="linenos"> 81</span>    
+<span class="linenos"> 82</span>    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="linenos"> 83</span>       <span class="s1">&#39;CREATE TABLE IF NOT EXISTS &quot;WELD_SAMPLES&quot; (</span><span class="se">\</span>
+<span class="linenos"> 84</span><span class="s1">           &quot;id&quot; serial, </span><span class="se">\</span>
+<span class="linenos"> 85</span><span class="s1">           &quot;time_start&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 86</span><span class="s1">           &quot;time_end&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 87</span><span class="s1">           &quot;environment_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 88</span><span class="s1">           &quot;motor_bearing_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 89</span><span class="s1">           &quot;spindle_bearing_t&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 90</span><span class="s1">           &quot;counter&quot; int, </span><span class="se">\</span>
+<span class="linenos"> 91</span><span class="s1">           &quot;sdintensity&quot; float, </span><span class="se">\</span>
+<span class="linenos"> 92</span><span class="s1">           &quot;times&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos"> 93</span><span class="s1">           &quot;angular_velocity&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos"> 94</span><span class="s1">           &quot;force&quot; float ARRAY, </span><span class="se">\</span>
+<span class="linenos"> 95</span><span class="s1">           &quot;displacement&quot; float ARRAY</span><span class="se">\</span>
+<span class="linenos"> 96</span><span class="s1">        )&#39;</span>
+<span class="linenos"> 97</span>    <span class="p">)</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span>
+<span class="linenos">100</span>    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span>    <span class="c1">#Closing the connection</span>
+<span class="linenos">103</span>    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">104</span>   
+<span class="linenos">105</span>    <span class="k">return</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span>
+<span class="linenos">109</span>
+<span class="hll"><span class="linenos">110</span><span class="k">def</span> <span class="nf">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span class="linenos">111</span>    <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos">112</span>                            <span class="n">user</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span> 
+<span class="linenos">113</span>                            <span class="n">password</span><span class="o">=</span><span class="n">myPassword</span><span class="p">,</span>
+<span class="linenos">114</span>                            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;db.fe.up.pt&#39;</span><span class="p">,</span>
+<span class="linenos">115</span>                            <span class="n">port</span><span class="o">=</span> <span class="s1">&#39;5432&#39;</span><span class="p">)</span>
+<span class="linenos">116</span>    <span class="k">return</span> <span class="n">conn</span>
+<span class="linenos">117</span>
+<span class="linenos">118</span>
+<span class="hll"><span class="linenos">119</span><span class="k">def</span> <span class="nf">insertDataV3</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">myPassword</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">statement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span class="linenos">120</span>    <span class="c1">#Inputs:</span>
+<span class="linenos">121</span>    <span class="c1">#    connection (such as connection = getConnectionDB())</span>
+<span class="linenos">122</span>    <span class="c1">#    statement [STR]: statement sql</span>
+<span class="linenos">123</span>    <span class="c1">#    data [LIST]: list with values to be saved</span>
+<span class="linenos">124</span>    <span class="k">try</span><span class="p">:</span>
+<span class="linenos">125</span>        <span class="n">delay</span> <span class="o">=</span> <span class="mf">0.050</span>
+<span class="linenos">126</span>        <span class="c1">#-------------------------------------------------------</span>
+<span class="linenos">127</span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+<span class="linenos">128</span>            <span class="c1">#Sometimes, postgres will give psycopg2.OperationalError</span>
+<span class="linenos">129</span>            <span class="c1">#To avoid losing data and return without saving anything,</span>
+<span class="linenos">130</span>            <span class="c1">#we try to save the data 20 times. </span>
+<span class="linenos">131</span>            <span class="c1">#Whenever the error occurs, we wait some time and</span>
+<span class="linenos">132</span>            <span class="c1">#try to close the current connection in order to re-connect.</span>
+<span class="linenos">133</span>            <span class="k">try</span><span class="p">:</span>
+<span class="linenos">134</span>                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Trying...(</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
+<span class="linenos">135</span>                <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="linenos">136</span>                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SET search_path TO &quot;DINASORE&quot;&#39;</span><span class="p">)</span>
+<span class="linenos">137</span>                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="linenos">138</span>            
+<span class="linenos">139</span>                <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="linenos">140</span>                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Success.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">141</span>                <span class="k">return</span> <span class="n">k</span>
+<span class="linenos">142</span>            <span class="k">except</span><span class="p">:</span>
+<span class="linenos">143</span>                <span class="c1">#print(traceback.format_exc())</span>
+<span class="linenos">144</span>                
+<span class="linenos">145</span>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+<span class="linenos">146</span>                <span class="k">try</span><span class="p">:</span>
+<span class="linenos">147</span>                    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">148</span>                    <span class="n">connection</span> <span class="o">=</span> <span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span>
+<span class="linenos">149</span>                                                 <span class="n">myPassword</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+<span class="linenos">150</span>                <span class="k">except</span><span class="p">:</span>
+<span class="linenos">151</span>                    <span class="n">connection</span> <span class="o">=</span> <span class="n">getConnectionDB</span><span class="p">(</span><span class="n">myUsername</span><span class="o">=</span><span class="n">myUsername</span><span class="p">,</span>
+<span class="linenos">152</span>                                                 <span class="n">myPassword</span><span class="o">=</span><span class="n">myPassword</span><span class="p">)</span>
+<span class="linenos">153</span>        
+<span class="linenos">154</span>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">155</span>    <span class="k">except</span><span class="p">:</span>
+<span class="linenos">156</span>        <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+<span class="linenos">157</span>    
+<span class="linenos">158</span>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-2" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-2" name="4-2" role="tabpanel" tabindex="0"><img alt="_images/database.png" src="_images/database.png" />
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="grafana">
+<h2>Grafana<a class="headerlink" href="#grafana" title="Permalink to this heading"></a></h2>
+<hr class="docutils" />
+<p>To deploy Dashboards with our Data we will be using Grafana local instance instead of the cloud version, mostly due do network constraints.</p>
+<p>The requirements/parameters are:</p>
+<ul class="simple">
+<li><p>Connection to FEUP VPN</p></li>
+<li><p>Address: 10.227.211.12</p></li>
+<li><p>Port: 3000</p></li>
+<li><p>Full Address: <code class="code docutils literal notranslate"><span class="pre">10.227.211.12:3000//login</span></code></p></li>
+<li><p>Username: admin</p></li>
+<li><p>Password: digi2-gpu</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<section id="adding-postgresql-datasource">
+<h3>Adding PostgreSQL DataSource<a class="headerlink" href="#adding-postgresql-datasource" title="Permalink to this heading"></a></h3>
+<p>Creating Dashboards require data, therefore one must previously add the data source. To accomplish that:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">(1)Front Page</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">(2)Access DataSources</button><button aria-controls="panel-5-5-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-2" name="5-2" role="tab" tabindex="-1">(3)Adding New DataSource</button><button aria-controls="panel-5-5-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-3" name="5-3" role="tab" tabindex="-1">(4)Search Available DataSources</button><button aria-controls="panel-5-5-4" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-4" name="5-4" role="tab" tabindex="-1">(5)DataSource Settings</button><button aria-controls="panel-5-5-5" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-5" name="5-5" role="tab" tabindex="-1">(6)Checking DataSources List</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>This is the main grafana front page.</p>
+</div>
+<img alt="_images/pagina01.png" src="_images/pagina01.png" />
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>The Left tab allow us to access our Data Sources list, under the Configuration menu.</p>
+</div>
+<img alt="_images/pagina02.png" src="_images/pagina02.png" />
+</div><div aria-labelledby="tab-5-5-2" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-2" name="5-2" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>This page allow us to manage the added data sources and add new ones.</p>
+</div>
+<img alt="_images/pagina03.png" src="_images/pagina03.png" />
+</div><div aria-labelledby="tab-5-5-3" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-3" name="5-3" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>This search page allow us to choose the supported Data Sources by Grafana. For the current application, we will be using the <strong>PostgreSQL</strong>.</p>
+</div>
+<img alt="_images/pagina04.png" src="_images/pagina04.png" />
+</div><div aria-labelledby="tab-5-5-4" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-4" name="5-4" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>The main settings to add/change:</p>
+<ul class="simple">
+<li><p>Data Source Name</p></li>
+<li><dl class="simple">
+<dt>PostgreSQL Connection</dt><dd><ul>
+<li><p>host: <code class="code docutils literal notranslate"><span class="pre">db.fe.up.pt</span></code></p></li>
+<li><p>database name</p></li>
+<li><p>username</p></li>
+<li><p>password</p></li>
+<li><p>TLS/SSL Mode <strong>disabled</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Then, after clicking the <code class="code docutils literal notranslate"><span class="pre">Save</span> <span class="pre">&amp;</span> <span class="pre">Test</span></code> button, the data source is ready to be used (if the message “Database Connection OK” appears).</p>
+</div>
+<img alt="_images/pagina05.png" src="_images/pagina05.png" />
+</div><div aria-labelledby="tab-5-5-5" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-5" name="5-5" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>If the Data Source was successfully added it should be visible in the Data Sources List (under the configuration menu on the left tab)</p>
+</div>
+<img alt="_images/pagina06.png" src="_images/pagina06.png" />
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>The full steps are portrayed below:</p>
+<img alt="_images/addDataSource.gif" src="_images/addDataSource.gif" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="exploring-the-data-source">
+<h3>Exploring the Data Source<a class="headerlink" href="#exploring-the-data-source" title="Permalink to this heading"></a></h3>
+<p>Before creating one dashboard, it could be useful to check if Grafana is being able to extract the data from our DataBase.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">(1)Access to Explorer</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">(2)Testing Query</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>We explore the Data Source by clicking the <strong>Explore</strong> button.</p>
+</div>
+<img alt="_images/explore01.png" src="_images/explore01.png" />
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>To execute some query, follow the steps:</p>
+<ul class="simple">
+<li><p>Select the desired output format (table, time series, etc);</p></li>
+<li><p>Build the query with the Query Editor</p></li>
+</ul>
+</div>
+<p>Example: query the database and display the column “time_start” values</p>
+<img alt="_images/explore02.png" src="_images/explore02.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="admonition error">
+<p class="admonition-title">Error</p>
+<p>No data is retrieved. This usually happens due to the fact that Grafana usually sets automatically the highest search path. The workaround for this is to <strong>Edit</strong> the Query and add the schema.</p>
+<p>Example: the table <strong>“WELD_SAMPLES”</strong> would be replaced by <strong>“DINASORE”.”WELD_SAMPLES”</strong> being “DINASORE” our schema.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>By accessing the <code class="code docutils literal notranslate"><span class="pre">code</span></code> tab we can <strong>edit</strong> the Queries:</p>
+<img alt="_images/explore03.png" src="_images/explore03.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>And, after adding the schema it results:</p>
+<img alt="_images/explore04.png" src="_images/explore04.png" />
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="creating-dashboard">
+<h3>Creating Dashboard<a class="headerlink" href="#creating-dashboard" title="Permalink to this heading"></a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">(1)Selecting DataSource</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">(2)Adding Panel</button><button aria-controls="panel-7-7-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-2" name="7-2" role="tab" tabindex="-1">(3)Building Queries</button><button aria-controls="panel-7-7-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-3" name="7-3" role="tab" tabindex="-1">(4)Query Example</button><button aria-controls="panel-7-7-4" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-4" name="7-4" role="tab" tabindex="-1">(5)Saving the Dashboard</button><button aria-controls="panel-7-7-5" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-5" name="7-5" role="tab" tabindex="-1">(6)Multiple Queries</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>The button “Build a Dashboard” quickly selects the desired data source to be used on the dashboard we want to create.</p>
+</div>
+<img alt="_images/d01.png" src="_images/d01.png" />
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>Dashboards may have a variety of elements. To start adding the first element, we can choose “Add a new Panel”.</p>
+</div>
+<img alt="_images/d02.png" src="_images/d02.png" />
+</div><div aria-labelledby="tab-7-7-2" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-2" name="7-2" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>This page allow us to configure our dashboard element. As for the data to be visualized, we build queries with the Query Editor which will provide the data.</p>
+</div>
+<img alt="_images/d03v2.png" src="_images/d03v2.png" />
+</div><div aria-labelledby="tab-7-7-3" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-3" name="7-3" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>For this example, the objective is to plot each row average force.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Consider that we have the following table structure:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>force</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>{1,2,3}</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>{3,3,6}</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>{4,6,5}</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+</tbody>
+</table>
+<p>Then, for each row the average would be:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>avg_force</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+</tbody>
+</table>
+<p>Thefore, we would like to plot x = {1, 2, 3, …} and y = {2, 4, 5, …}.</p>
+<p>With the following SQL it is possible to accomplish that:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;time&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;AverageForce&quot;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span>
+<span class="linenos">2</span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">UNNEST</span><span class="p">(</span><span class="k">force</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;DINASORE&quot;</span><span class="p">.</span><span class="ss">&quot;WELD_SAMPLES&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="linenos">3</span><span class="n">subquery</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Since this code has more complexity, it is preferred to write it on the code Editor instead of using the Query Editor/Builder.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Limiting to just 50 welding samples:</p>
+<img alt="_images/d04.png" src="_images/d04.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>With 5000 welding samples (change to <code class="code docutils literal notranslate"><span class="pre">LIMIT</span> <span class="pre">5000</span></code>):</p>
+<img alt="_images/d05.png" src="_images/d05.png" />
+</div><div aria-labelledby="tab-7-7-4" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-4" name="7-4" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>After adding our queries and configuring our Dashboard we apply the changes to save it.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<img alt="_images/d06.png" src="_images/d06.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Checking our panel:</p>
+<img alt="_images/d07.png" src="_images/d07.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Saving the Dashboard:</p>
+<img alt="_images/d08.png" src="_images/d08.png" />
+</div><div aria-labelledby="tab-7-7-5" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-5" name="7-5" role="tabpanel" tabindex="0"><div class="admonition-info admonition">
+<p class="admonition-title">INFO</p>
+<p>It is also possible to have multiple queries on the same dashboard element.</p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<img alt="_images/d09.png" src="_images/d09.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>The queries used above are:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;time&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;AverageForce&quot;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span>
+<span class="linenos"> 2</span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">UNNEST</span><span class="p">(</span><span class="k">force</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;DINASORE&quot;</span><span class="p">.</span><span class="ss">&quot;WELD_SAMPLES&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="linenos"> 3</span><span class="n">subquery</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;time&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;AverangeAngularVelocity&quot;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span>
+<span class="linenos"> 7</span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">UNNEST</span><span class="p">(</span><span class="n">angular_velocity</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;DINASORE&quot;</span><span class="p">.</span><span class="ss">&quot;WELD_SAMPLES&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="linenos"> 8</span><span class="n">subquery</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;time&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;AverangeDisplacement&quot;</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span>
+<span class="linenos">12</span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">UNNEST</span><span class="p">(</span><span class="n">displacement</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;DINASORE&quot;</span><span class="p">.</span><span class="ss">&quot;WELD_SAMPLES&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="linenos">13</span><span class="n">subquery</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PostgreSQL-to-Grafana documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Conrado.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
